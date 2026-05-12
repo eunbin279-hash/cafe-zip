@@ -1,6 +1,7 @@
 @font-face {
   font-family: 'Adultkid';
-  src: url('./Adultkid.ttf') format('truetype');
+  src: url('Adultkid.ttf') format('truetype');
+  font-display: swap;
 }
 
 :root {
