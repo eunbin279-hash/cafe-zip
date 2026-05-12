@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafe Archive</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>cafe archive</h1>
+    <button id="add-btn" class="primary-btn">기록 추가하기</button>
+  </header>
+
+  <main>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="font-size: 1.2rem; font-weight: normal; margin: 0;">☕️ Archive</h2>
+      <select id="sort-select" style="padding: 8px 16px; border-radius: 20px; border: 1px dashed var(--border-color); font-family: inherit; font-size: 0.9rem; background: var(--white); outline: none; cursor: pointer;">
+        <option value="all">전체 보기 (최신순)</option>
+      </select>
+    </div>
+    <div class="grid-container" id="cafe-grid">
+      <!-- 카페 리스트가 여기에 렌더링됩니다 -->
+    </div>
+  </main>
+
+  <!-- 카페 정보 입력 모달 -->
+  <div class="modal-overlay" id="input-modal">
+    <div class="modal-content">
+      <button class="close-btn" id="close-input-btn">&times;</button>
+      <h2>새로운 카페 기록</h2>
+      <form id="add-cafe-form">
+        <div class="form-group">
+          <label for="cafe-name">카페 이름</label>
+          <input type="text" id="cafe-name" placeholder="예: 비전스트롤" required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-region">지역</label>
+          <input type="text" id="cafe-region" placeholder="예: 망원, 합정" required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-address">주소</label>
+          <input type="text" id="cafe-address" placeholder="정확한 주소를 입력해주세요" required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-link">네이버지도 링크</label>
+          <input type="url" id="cafe-link" placeholder="https://naver.me/..." required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-menu">대표메뉴</label>
+          <input type="text" id="cafe-menu" placeholder="예: 버터푸딩" required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-price">가격</label>
+          <input type="text" id="cafe-price" placeholder="예: 9,000원" required>
+        </div>
+        <div class="form-group">
+          <label for="cafe-comment">한 마디 코멘트</label>
+          <input type="text" id="cafe-comment" placeholder="방문 후기를 짧게 남겨주세요">
+        </div>
+        <div class="form-group">
+          <label for="cafe-thumbnail">메인 썸네일 사진 (선택)</label>
+          <input type="file" id="cafe-thumbnail" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label for="cafe-image">상세 모달 사진 (선택)</label>
+          <input type="file" id="cafe-image" accept="image/*">
+          <small id="image-hint" style="color:#666; font-size:0.8rem; margin-top:4px; display:block;">수정 시 새로운 사진을 첨부하지 않으면 기존 사진이 유지됩니다.</small>
+        </div>
+        <button type="submit" class="submit-btn">저장하기</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 카페 상세 정보 모달 -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content detail-content">
+      <button class="close-btn" id="close-detail-btn">&times;</button>
+      <div id="detail-image-placeholder" class="detail-image">
+        <!-- 이미지가 없을 때 빈 공간 -->
+      </div>
+      <h2 id="detail-name">카페 이름</h2>
+      <div class="tags" id="detail-tags">
+        <!-- 파이어베이스에 저장된 하위 정보들이 태그로 표시됩니다 -->
+      </div>
+      <div class="detail-comment" id="detail-comment">
+        <!-- 코멘트 -->
+      </div>
+      <div class="detail-info">
+        <p><strong>★ 주소:</strong> <span id="detail-address"></span></p>
+        <p><strong>☆ 대표메뉴:</strong> <span id="detail-menu"></span> (<span id="detail-price"></span>)</p>
+        
+        <div class="map-container" style="margin-top: 20px; border-radius: 8px; overflow: hidden; height: 200px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+          <iframe id="detail-map" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <a id="detail-link" href="#" target="_blank" class="map-link" style="margin-top: 0;">★ 네이버지도 앱에서 열기</a>
+          <div style="display: flex; gap: 8px;">
+            <button id="delete-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #ff4d4f;">삭제</button>
+            <button id="edit-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #666;">수정</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase 및 App Logic -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
