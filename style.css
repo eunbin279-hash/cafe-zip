@@ -1,4 +1,10 @@
 @font-face {
+  font-family: 'Rascal';
+  src: url('RASCAL__.TTF') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Adultkid';
   src: url('Adultkid.ttf') format('truetype');
   font-display: swap;
@@ -31,18 +37,25 @@ body {
 
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 60px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+}
+
+#add-btn {
+  position: absolute;
+  right: 0;
 }
 
 h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-family: 'Rascal', sans-serif;
+  font-size: 3rem;
+  font-weight: normal;
+  letter-spacing: 2px;
 }
 
 .primary-btn {
