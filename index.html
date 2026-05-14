@@ -14,7 +14,8 @@
   </header>
 
   <main>
-    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <button id="toggle-hidden-btn" class="primary-btn" style="background-color: var(--secondary-text); padding: 8px 16px; font-size: 0.9rem;">숨겨진 카페 보기</button>
       <select id="sort-select" style="padding: 8px 16px; border-radius: 20px; border: 1px dashed var(--border-color); font-family: inherit; font-size: 0.9rem; background: var(--white); outline: none; cursor: pointer;">
         <option value="all">전체 보기 (최신순)</option>
       </select>
@@ -97,6 +98,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
           <a id="detail-link" href="#" target="_blank" class="map-link" style="margin-top: 0;">★ 네이버지도 앱에서 열기</a>
           <div style="display: flex; gap: 8px;">
+            <button id="restore-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #28a745; display: none;">복구</button>
+            <button id="hide-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #f39c12;">숨기기</button>
             <button id="delete-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #ff4d4f;">삭제</button>
             <button id="edit-btn" class="primary-btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: #666;">수정</button>
           </div>

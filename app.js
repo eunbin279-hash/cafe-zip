@@ -59,11 +59,15 @@ const cafeGrid = document.getElementById('cafe-grid');
 const editBtn = document.getElementById('edit-btn');
 const deleteBtn = document.getElementById('delete-btn');
 const sortSelect = document.getElementById('sort-select');
+const toggleHiddenBtn = document.getElementById('toggle-hidden-btn');
+const hideBtn = document.getElementById('hide-btn');
+const restoreBtn = document.getElementById('restore-btn');
 
 let editingId = null;
 let currentDetailData = null;
 let allCafes = [];
 let uniqueDistricts = new Set();
+let isViewingHidden = false;
 
 // 모달 열기/닫기 함수
 function openModal(modal) {
@@ -112,6 +116,40 @@ deleteBtn.addEventListener('click', async () => {
       alert("삭제 중 오류가 발생했습니다.");
     }
   }
+});
+
+hideBtn.addEventListener('click', async () => {
+  if (!currentDetailData) return;
+  if (confirm("이 기록을 숨기시겠습니까?")) {
+    try {
+      await updateDoc(doc(db, "cafes", currentDetailData.id), { isHidden: true });
+      closeModal(detailModal);
+    } catch (error) {
+      console.error("Error hiding document: ", error);
+      alert("숨기기 중 오류가 발생했습니다.");
+    }
+  }
+});
+
+restoreBtn.addEventListener('click', async () => {
+  if (!currentDetailData) return;
+  if (confirm("이 기록을 복구하시겠습니까?")) {
+    try {
+      await updateDoc(doc(db, "cafes", currentDetailData.id), { isHidden: false });
+      closeModal(detailModal);
+    } catch (error) {
+      console.error("Error restoring document: ", error);
+      alert("복구 중 오류가 발생했습니다.");
+    }
+  }
+});
+
+toggleHiddenBtn.addEventListener('click', () => {
+  isViewingHidden = !isViewingHidden;
+  toggleHiddenBtn.innerText = isViewingHidden ? '홈 화면으로 돌아가기' : '숨겨진 카페 보기';
+  document.querySelector('h1').innerText = isViewingHidden ? 'hidden archive' : 'cafe archive';
+  updateSortDropdown();
+  renderCafes();
 });
 
 // 모달 바깥 영역 클릭시 닫기
@@ -178,6 +216,7 @@ addCafeForm.addEventListener('submit', async (e) => {
         imageUrl,
         thumbnailUrl,
         tags,
+        isHidden: false,
         createdAt: new Date()
       });
     }
@@ -221,7 +260,10 @@ function updateSortDropdown() {
   const currentSelection = sortSelect.value;
   sortSelect.innerHTML = '<option value="all">전체 보기 (최신순)</option>';
   
-  const sortedDistricts = Array.from(uniqueDistricts).sort();
+  const visibleCafes = allCafes.filter(a => isViewingHidden ? a.isHidden : !a.isHidden);
+  const currentDistricts = new Set(visibleCafes.map(a => extractDistrict(a.address)).filter(d => d));
+  
+  const sortedDistricts = Array.from(currentDistricts).sort();
   sortedDistricts.forEach(dist => {
     const option = document.createElement('option');
     option.value = dist;
@@ -249,7 +291,7 @@ function renderCafes() {
   cafeGrid.innerHTML = ''; // 초기화
   const sortMode = sortSelect.value;
   
-  let displayList = [...allCafes];
+  let displayList = allCafes.filter(a => isViewingHidden ? a.isHidden : !a.isHidden);
   
   if (sortMode !== 'all') {
     displayList = displayList.filter(a => extractDistrict(a.address) === sortMode);
@@ -314,6 +356,14 @@ function showDetail(data) {
         tagsContainer.appendChild(tagSpan);
       }
     });
+  }
+
+  if (data.isHidden) {
+    hideBtn.style.display = 'none';
+    restoreBtn.style.display = 'inline-block';
+  } else {
+    hideBtn.style.display = 'inline-block';
+    restoreBtn.style.display = 'none';
   }
 
   openModal(detailModal);
