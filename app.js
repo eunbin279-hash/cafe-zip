@@ -69,6 +69,15 @@ let allCafes = [];
 let uniqueDistricts = new Set();
 let isViewingHidden = false;
 
+// 관리자 모드 체크 (?admin=true)
+const urlParams = new URLSearchParams(window.location.search);
+const isAdmin = urlParams.get('admin') === 'true';
+
+if (!isAdmin) {
+  addBtn.style.display = 'none';
+  toggleHiddenBtn.style.display = 'none';
+}
+
 // 모달 열기/닫기 함수
 function openModal(modal) {
   modal.classList.add('active');
@@ -358,12 +367,21 @@ function showDetail(data) {
     });
   }
 
-  if (data.isHidden) {
+  if (!isAdmin) {
     hideBtn.style.display = 'none';
-    restoreBtn.style.display = 'inline-block';
-  } else {
-    hideBtn.style.display = 'inline-block';
     restoreBtn.style.display = 'none';
+    editBtn.style.display = 'none';
+    deleteBtn.style.display = 'none';
+  } else {
+    editBtn.style.display = 'inline-block';
+    deleteBtn.style.display = 'inline-block';
+    if (data.isHidden) {
+      hideBtn.style.display = 'none';
+      restoreBtn.style.display = 'inline-block';
+    } else {
+      hideBtn.style.display = 'inline-block';
+      restoreBtn.style.display = 'none';
+    }
   }
 
   openModal(detailModal);
